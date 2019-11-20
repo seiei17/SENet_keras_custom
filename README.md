@@ -1,6 +1,7 @@
 # SENet_keras_custom
 A practice after reading paper.
 # SENet
+# 与调试过程
 
 ## 前言
 近期研究很多都在探讨通过特征之间的空间关系来增强模型对特征的表示。
