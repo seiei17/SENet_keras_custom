@@ -1,7 +1,6 @@
 # SENet_keras_custom
 A practice after reading paper.
 # SENet
-# 与调试过程
 
 ## 前言
 近期研究很多都在探讨通过特征之间的空间关系来增强模型对特征的表示。
@@ -83,42 +82,3 @@ excitation操作的影响比较大，应该注意选择合适的操作。
 
 所以作者提出，可以除去靠近分类器的SE block，这样可以减少大量的参数且只损失一点点的精确度。
 
-# 调试记录
-
-* 使用模型为SEResNet-50
-* 数据集为cifar10/100
-* 代码见: [https://github.com/seiei17/SENet_keras_custom](https://github.com/seiei17/SENet_keras_custom)
-
-## step 1
-
-* lr=0.001
-* 学习率策略，10个epoch如果val accuracy没有提升，则降低十倍
-* l2 weight decay=0.0001
-* optimizer=Adam
-* epochs=150
-* batch size=128
-* val size=0.1
-* Fsq=AvgPool
-* Fex=FC+ReLU+FC+Sigmoid
-
-#### 结果
-val size=0.1，则在50000训练集中使用45000个作为训练，5000个作为验证。
-最后准确率均只有50%左右。
-
-## step 2
-* lr=0.001
-* l2 weight decay=0.00001
-* val size=0.05
-
-#### 结果
-准确率达到76%且还有继续上涨的趋势。150个epochs没有达到饱和。
-
-## step 3
-* lr=1e-3, epoch>80: 1e-1, epoch>120: 1e-2, epoch>160: 1e-3, epoch>180: .5e-3
-* 5个epoch，val loss没有减少，因子sqrt（0.1），最低0.5e-6
-* epochs=200
-* batch size=32
-* val size=0.5
-* weight decay=1e-4
-
-#### 结果
