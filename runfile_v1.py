@@ -10,12 +10,12 @@ import os
 from SEResNet_v1 import seresnet
 from CifarGenerator import CifarGen
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '3'
+# os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 
-num_classes = 10
+num_classes = 100
 path = '../../database/cifar{}/'.format(num_classes)
-checkpoint_path = './history/checkpoint_v1.h5'
-txt_path = './history/accuracy_v1.txt'
+checkpoint_path = './history/checkpoint_100_v1.h5'
+txt_path = './history/accuracy_100_v1.txt'
 
 resume = False
 epochs = 200
