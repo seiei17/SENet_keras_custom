@@ -15,9 +15,9 @@ A practice after reading paper.
 ### Squeeze：嵌入全局信息
 对于卷积操作，每个学习到的filter都是对空间局部进行操作，这导致输出无法表征其他位置的信息。
 
-论文提出方法将空间信息压缩成通道描述子，这可以通过**全局平均池化**来进行实现。用$z$表示经过squeeze后的输出，那么$z_c$表示第c个通道上的z：
+论文提出方法将空间信息压缩成通道描述子，这可以通过**全局平均池化**来进行实现。用z表示经过squeeze后的输出，那么<img src="https://latex.codecogs.com/gif.latex?$z_c$" title="$z_c$" />表示第c个通道上的z：
 
-$$z_c=\operatorname{F}_ {sq}(u_c)={1\over{H* C}}\sum_{i=1}^H\sum_{j=1}^Wu_c(i,j)$$
+<img src="https://latex.codecogs.com/gif.latex?$$z_c=\operatorname{F}_&space;{sq}(u_c)={1\over{H*&space;C}}\sum_{i=1}^H\sum_{j=1}^Wu_c(i,j)$$" title="$$z_c=\operatorname{F}_ {sq}(u_c)={1\over{H* C}}\sum_{i=1}^H\sum_{j=1}^Wu_c(i,j)$$" />
 
 squeeze操作主要是求得通道间的相关性，如果能屏蔽掉空间上的分布会有更好的效果。所以论文只是选择了最简单的一种方法——Global Average Pooling，其实还有很多方法都可以适用。
 
@@ -29,34 +29,47 @@ squeeze操作主要是求得通道间的相关性，如果能屏蔽掉空间上�
 
 得到excitation公式：
 
-$$s=\operatorname{F}_ {ex}(z,W)=\sigma(g(z,W))=\sigma(W_2\delta(W_1z))$$
+<img src="https://latex.codecogs.com/gif.latex?$$s=\operatorname{F}_&space;{ex}(z,W)=\sigma(g(z,W))=\sigma(W_2\delta(W_1z))$$" title="$$s=\operatorname{F}_ {ex}(z,W)=\sigma(g(z,W))=\sigma(W_2\delta(W_1z))$$" />
 
-* $\delta$是ReLU操作。
+* <img src="https://latex.codecogs.com/gif.latex?$\delta$" title="$\delta$" />是ReLU操作。
 * 为了减少计算负担，引入了瓶颈操作。即$W_1,W_2$表示两次FC操作的权重，其中第一次进行降维，第二次进行升维。进行降维的大小取决去**r**。经过测试，作者得出，**当r=16的时候效果最好**。
 
 于是得到了对U进行scale的算子s：
 
-$$\widetilde{x_c}=\operatorname{F}_ {scale}(u_c,s_c)=s_cu_c$$
+<img src="https://latex.codecogs.com/gif.latex?$$\widetilde{x_c}=\operatorname{F}_&space;{scale}(u_c,s_c)=s_cu_c$$" title="$$\widetilde{x_c}=\operatorname{F}_ {scale}(u_c,s_c)=s_cu_c$$" />
 
 ### Instantiations
 SEBlock能被加入到很多的网络中，如在**VGG**中，可以在每个卷积激活函数后面加入SEBlock。
 
-在**GoogLeNet**中，$\operatorname{F}_ {tr}$操作就代表每个inception模块，得到SE-Inception network。
+在**GoogLeNet**中，<img src="https://latex.codecogs.com/gif.latex?$\operatorname{F}_&space;{tr}$" title="$\operatorname{F}_ {tr}$" />操作就代表每个inception模块，得到SE-Inception network。
 
-在ResNet中，$\operatorname{F}_ {tr}$操作就代表每个residual模块，得到SE-ResNet。
+![ins](./depository/ins.png)
+
+在ResNet中，<img src="https://latex.codecogs.com/gif.latex?$\operatorname{F}_&space;{tr}$" title="$\operatorname{F}_ {tr}$" />操作就代表每个residual模块，得到SE-ResNet。
+
+![res](./depository/res.png)
 
 ## 额外讨论
 通过ResNet-50进行试验讨论。
 
 ### Reduction ratio
+
+![reduce](./depository/reduce.png)
+
 通过比较得出当r=16时，网络有最好的效果。
 
 在实际情况中应该随机应变。
 
 ### Squeeze operator
+
+![sqn](./depository/sqo.png)
+
 论文只比较了maxpool和avgpool的差别，两者效果都很好。
 
 ### excitation operator
+
+![exo](./depository/exo.png)
+
 通过与ReLU和tanh函数比较，发现ReLu的效果最差，甚至低于原网络。
 
 excitation操作的影响比较大，应该注意选择合适的操作。
@@ -64,6 +77,8 @@ excitation操作的影响比较大，应该注意选择合适的操作。
 ### integration strategy
 
 文中提出了几种不同的整合策略，同时给出了相应的错误率。
+
+![its](./depository/its.png)
 
 并且也分出了是否在residual之内添加seblock的区别，称为**SE_3x3**。
 
